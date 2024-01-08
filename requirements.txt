@@ -1,3 +1,4 @@
 Django==3.0.3
 djangorestframework==3.14.0
 drf_yasg==1.21.7
+django-bootstrap4==23.1

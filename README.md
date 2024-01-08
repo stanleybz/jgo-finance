@@ -43,7 +43,7 @@ This is a finance application built with Django that allows users to record thei
   python manage.py createsuperuser
   ```
 
-6. Populate data
+6. Populate data, before that you need to update populate_date.py sys.path.append to current foloder
   ```
   python simplesite/script/populate_data.py
   ```
