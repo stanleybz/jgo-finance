@@ -1,0 +1,36 @@
+<div class="container mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-4">Stock Dashboard</h1>
+
+  <div class="flex items-center mb-4">
+    <label for="stock-select" class="mr-2">Select a stock:</label>
+    <select id="stock-select" class="form-select border border-gray-300 rounded p-2">
+      <!-- Load the options by API -->
+    </select>
+    <!-- A button next to select to add current item to portfolio -->
+    <button id="add-to-portfolio" class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      Add to Portfolio
+    </button>
+  </div>
+
+  <div id="chart-container" class="bg-gray-100 p-4 rounded min-h-[400px]">
+    <canvas id="myChart"></canvas>
+  </div>
+
+  <!-- A table to show all headlines -->
+  <div class="mt-4">
+    <h2 class="text-2xl font-bold mb-4">Headlines</h2>
+    <div class="relative overflow-x-auto">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">Date</th>
+            <th scope="col" class="px-6 py-3">Headline</th>
+          </tr>
+        </thead>
+        <tbody id="headlines-table-body">
+          <!-- Your table data will be dynamically populated here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

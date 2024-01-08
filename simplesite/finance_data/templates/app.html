@@ -1,0 +1,18 @@
+{% include 'header.html' %}
+{% csrf_token %}
+
+<div class="flex">
+  {% include 'left_navigation.html' %}
+
+  {% if '/ticker' in request.get_full_path %}
+    {% include 'ticker_view.html' %}
+  {% elif '/portfolio' in request.get_full_path %}
+    {% include 'portfolio_view.html' %}
+  {% else %}
+    <div class="flex justify-center items-center h-screen">
+      Page not found
+    </div>
+  {% endif %}
+</div>
+
+{% include 'footer.html' %}
