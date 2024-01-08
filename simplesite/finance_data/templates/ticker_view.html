@@ -1,16 +1,17 @@
+{% load bootstrap4 %}
+
 <div class="container mx-auto p-4">
   <h1 class="text-2xl font-bold mb-4">Stock Dashboard</h1>
 
-  <div class="flex items-center mb-4">
-    <label for="stock-select" class="mr-2">Select a stock:</label>
-    <select id="stock-select" class="form-select border border-gray-300 rounded p-2">
-      <!-- Load the options by API -->
-    </select>
-    <!-- A button next to select to add current item to portfolio -->
-    <button id="add-to-portfolio" class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-      Add to Portfolio
+  <!-- Insert form from form.py -->
+  <form action="" method="post" class="form flex inline">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <input id="form-type" name="type" value="post" class="hidden" />
+    <button id="add-to-portfolio" type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      Submit
     </button>
-  </div>
+  </form>
 
   <div id="chart-container" class="bg-gray-100 p-4 rounded min-h-[400px]">
     <canvas id="myChart"></canvas>

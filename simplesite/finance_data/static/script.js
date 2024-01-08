@@ -1,6 +1,6 @@
 const chartCtx = document.getElementById('myChart');
 let financeChart, portfolioChart;
-let headlinesData, headlinesCount; // global variables for headlines
+let headlinesData, headlinesCount;
 let portfolio;
 let companies;
 let selectedTicker;
@@ -62,7 +62,6 @@ async function loadPortfolioChart() {
 }
 
 async function loadPortfolioTable() {
-    // Show the portfolio table
     const tableBody = document.getElementById('portfolio-table-body');
     tableBody.innerHTML = '';
 
@@ -73,6 +72,8 @@ async function loadPortfolioTable() {
         const highestCell = document.createElement('td');
         const lowestCell = document.createElement('td');
         const removeCell = document.createElement('td');
+        const remark = document.createElement('td');
+        const targetPrice = document.createElement('td');
 
         tickerCell.innerText = item.Ticker;
         nameCell.innerText = companies.find(company => company.Ticker === item.Ticker).Name;
@@ -88,6 +89,8 @@ async function loadPortfolioTable() {
             }
             return acc;
         }, null);
+        remark.innerText = item.Remark;
+        targetPrice.innerText = item.TargetPrice;
 
         removeCell.appendChild((() => {
             const button = document.createElement('button');
@@ -107,6 +110,8 @@ async function loadPortfolioTable() {
         row.appendChild(highestCell);
         row.appendChild(lowestCell);
         row.appendChild(lowestCell);
+        row.appendChild(remark);
+        row.appendChild(targetPrice);
         row.appendChild(removeCell);
 
         tableBody.appendChild(row);
@@ -192,22 +197,11 @@ function seraliseDataWithHeadlines(data, headlinesByDate = []) {
     return chartData;
 }
 
-function checkExistingPortfolio(ticker) {
-    // if current selected item is in portfolio, change add to portfolio button to remove from portfolio
-    const addToPortfolioButton = document.getElementById('add-to-portfolio');
-    if (portfolio.find(item => item.Ticker === ticker)) {
-        addToPortfolioButton.innerText = 'Remove from Portfolio';
-    } else {
-        addToPortfolioButton.innerText = 'Add to Portfolio';
-    }
-}
-
 async function onSelectChange(event) {
     selectedTicker = event.target.value;
     const data = await fetchFinanceData(selectedTicker);
     const searlisedData = seraliseDataWithHeadlines(data, headlinesCount)
     loadChart(searlisedData);
-    checkExistingPortfolio(selectedTicker);
 }
 
 async function fetchUserPortfolio() {
@@ -219,7 +213,6 @@ async function fetchUserPortfolio() {
             }
         });
 
-        // Logout if token is invalid
         if (response.status === 401) {
             logout();
         }
@@ -246,8 +239,7 @@ function loadHeadlineToTable(headlines) {
     });
 }
 
-// Post to /user_portfolio with { ticker: ticker }
-async function addOrRemovePortfolio(ticker, remove = false) {
+async function addOrRemovePortfolio(ticker, remove = false, targetPrice = 0, remark = '') {
     try {
         const token = localStorage.getItem('token');
         const response = await fetch('/api/user_portfolio', {
@@ -256,7 +248,11 @@ async function addOrRemovePortfolio(ticker, remove = false) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
             },
-            body: JSON.stringify({ ticker })
+            body: JSON.stringify({
+                ticker,
+                target_price: parseFloat(targetPrice),
+                remark,
+            })
         });
 
         if (response.status === 401) {
@@ -277,7 +273,6 @@ function logout() {
 }
 
 $(document).ready(async function () {
-    // If logged in
     if (window.location.pathname.includes('/app')) {
         portfolio = await fetchUserPortfolio();
         companies = await loadInitialCompanies();
@@ -290,26 +285,13 @@ $(document).ready(async function () {
         headlinesCount = groupHeadlinesByDate(headlinesData);
         loadHeadlineToTable(headlinesData);
 
-        // fetch the first company and load chart
         const firstCompany = companies[0];
-        checkExistingPortfolio(firstCompany.Ticker);
         const financeData = await fetchFinanceData(firstCompany.Ticker);
         const searlisedData = seraliseDataWithHeadlines(financeData, headlinesCount)
         loadChart(searlisedData);
 
-        // Select on change listener
         const selectElement = document.getElementById('stock-select');
         selectElement.addEventListener('change', onSelectChange);
-
-        // add-to-portfolio on click listener
-        const addToPortfolioButton = document.getElementById('add-to-portfolio');
-        addToPortfolioButton.addEventListener('click', async (e) => {
-            await addOrRemovePortfolio(selectElement.value, e.target.innerText === 'Remove from Portfolio')
-            // Reload portfolio
-            portfolio = await fetchUserPortfolio();
-            checkExistingPortfolio(selectedTicker);
-        });
-
     } else if (window.location.pathname.includes('/app/portfolio')) {
         portfolio = await fetchUserPortfolio();
 

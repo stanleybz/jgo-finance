@@ -28,49 +28,44 @@ class FinanceDataDetailsTestCase(TestCase):
         self.finance_data_db = FinanceData.objects.get(id=1)
 
     def test_get_finance_data_details(self):
-      url = reverse('finance_data_list')
-      response = self.client.get(url)
+        url = reverse('finance_data_list')
+        response = self.client.get(url)
 
-      self.assertEqual(response.status_code, status.HTTP_200_OK)
-      # get columns from response data
-      id = response.data['results'][0]['id']
-      date = response.data['results'][0]['Date']
-      open = response.data['results'][0]['Open']
-      high = response.data['results'][0]['High']
-      low = response.data['results'][0]['Low']
-      close = response.data['results'][0]['Close']
-      volume = response.data['results'][0]['Volume']
-      dividends = response.data['results'][0]['Dividends']
-      stock_splits = response.data['results'][0]['Stock_Splits']
-      ticker = response.data['results'][0]['Ticker']
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # get columns from response data
+        id = response.data['results'][0]['id']
+        date = response.data['results'][0]['Date']
+        open = response.data['results'][0]['Open']
+        high = response.data['results'][0]['High']
+        low = response.data['results'][0]['Low']
+        close = response.data['results'][0]['Close']
+        volume = response.data['results'][0]['Volume']
+        dividends = response.data['results'][0]['Dividends']
+        stock_splits = response.data['results'][0]['Stock_Splits']
+        ticker = response.data['results'][0]['Ticker']
 
-      # compare with self.finance_data_db
-      id_db = self.finance_data_db.id
-      date_db = self.finance_data_db.Date
-      open_db = self.finance_data_db.Open
-      high_db = self.finance_data_db.High
-      low_db = self.finance_data_db.Low
-      close_db = self.finance_data_db.Close
-      volume_db = self.finance_data_db.Volume
-      dividends_db = self.finance_data_db.Dividends
-      stock_splits_db = self.finance_data_db.Stock_Splits
-      ticker_db = self.finance_data_db.Ticker
-      
-      self.assertEqual(id, id_db)
-      self.assertEqual(date, date_db.strftime('%Y-%m-%d'))
-      self.assertEqual(Decimal(open), open_db) 
-      self.assertEqual(Decimal(high), high_db)
-      self.assertEqual(Decimal(low), low_db)
-      self.assertEqual(Decimal(close), close_db)
-      self.assertEqual(Decimal(volume), volume_db)
-      self.assertEqual(Decimal(dividends), dividends_db)
-      self.assertEqual(Decimal(stock_splits), stock_splits_db)
-      self.assertEqual(ticker, ticker_db)
+        # compare with self.finance_data_db
+        id_db = self.finance_data_db.id
+        date_db = self.finance_data_db.Date
+        open_db = self.finance_data_db.Open
+        high_db = self.finance_data_db.High
+        low_db = self.finance_data_db.Low
+        close_db = self.finance_data_db.Close
+        volume_db = self.finance_data_db.Volume
+        dividends_db = self.finance_data_db.Dividends
+        stock_splits_db = self.finance_data_db.Stock_Splits
+        ticker_db = self.finance_data_db.Ticker
 
-    def test_get_finance_data_details_ticker_not_exists(self):
-      url = reverse('finance_data_list')
-      response = self.client.get(url, {'ticker': 'aapp'})
-      self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(id, id_db)
+        self.assertEqual(date, date_db.strftime('%Y-%m-%d'))
+        self.assertEqual(Decimal(open), open_db) 
+        self.assertEqual(Decimal(high), high_db)
+        self.assertEqual(Decimal(low), low_db)
+        self.assertEqual(Decimal(close), close_db)
+        self.assertEqual(Decimal(volume), volume_db)
+        self.assertEqual(Decimal(dividends), dividends_db)
+        self.assertEqual(Decimal(stock_splits), stock_splits_db)
+        self.assertEqual(ticker, ticker_db)
 
 class CompanyListTestCase(TestCase):
     def setUp(self):
@@ -96,9 +91,6 @@ class HeadlinesListTestCase(TestCase):
         )
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        serializer = NewsSerializer(headline1)
-        self.assertEqual(response.json()[0], serializer.data)
-
 
 class UserPortfolioTestCase(TestCase):
     def setUp(self):

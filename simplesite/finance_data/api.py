@@ -16,13 +16,9 @@ class CustomPagination(PageNumberPagination):
     
 @api_view(['GET'])
 @csrf_exempt
-def finance_data_list(request, ticker):
-    """
-    List all code snippets, or create a new snippet.
-    """
+def finance_data_list(request, ticker = None):
     if request.method == 'GET':
         # filter by ticker
-        # ticker = request.GET.get('ticker')
         if ticker is not None:
             financeData = FinanceData.objects.filter(Ticker=ticker)
             if not financeData.exists():
@@ -85,6 +81,8 @@ def user_portfolio(request):
     elif request.method == 'POST':
         data = json.loads(request.body)
         ticker = data.get('ticker')
+        remark = data.get('remark')
+        target_price = data.get('target_price')
 
         if ticker is None:
             return HttpResponse("Ticker is required", status=400)
@@ -93,7 +91,7 @@ def user_portfolio(request):
         if exist_ticker.exists():
             return HttpResponse("Ticker already exist", status=400)
 
-        user_portfolio = UserPortfolio(User=user, Ticker=ticker)
+        user_portfolio = UserPortfolio(User=user, Ticker=ticker, Remark=remark, TargetPrice=target_price)
         user_portfolio.save()
         return HttpResponse("Data saved successfully", status=201)    
     

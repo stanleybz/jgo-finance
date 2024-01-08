@@ -10,6 +10,12 @@ This is a finance application built with Django that allows users to record thei
 
 ## Setup
 
+0. Prequest
+  ```
+  apt-get update
+  apt-get install python3-virtualenv
+  ```
+
 1. Enter virtual environment:
   ```
   python3 -m venv --system-site-packages venv
